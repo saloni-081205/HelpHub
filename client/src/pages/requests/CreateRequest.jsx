@@ -98,7 +98,6 @@ const handleSubmit = async (e) => {
       <form onSubmit={handleSubmit} className="card space-y-5">
         <div>
           <label className="label-text">Title</label>
-          <FormField label="Title" name="title" error={errors.title}>
           <input
             name="title"
             value={form.title}
@@ -108,7 +107,7 @@ const handleSubmit = async (e) => {
             maxLength={120}
             className="input-field"
           />
-          </FormField>
+          
         </div>
 
         <div>
@@ -180,7 +179,6 @@ const handleSubmit = async (e) => {
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className="label-text">Location</label>
-            <FormField label="Title" name="title" error={errors.title}>
               <input
               name="location"
               value={form.location}
@@ -189,12 +187,12 @@ const handleSubmit = async (e) => {
               placeholder="Area, City"
               className="input-field"
             />
-            </FormField>
+  
             
           </div>
           <div>
             <label className="label-text">Required By</label>
-            <FormField label="Title" name="title" error={errors.title}>
+            
             <input
               name="requiredDate"
               type="date"
@@ -203,14 +201,14 @@ const handleSubmit = async (e) => {
               required
               className="input-field"
             />
-            </FormField>
+           
           </div>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className="label-text">Contact Name</label>
-            <FormField label="Title" name="title" error={errors.title}>
+            
             <input
               name="contactName"
               value={form.contactName}
@@ -218,11 +216,11 @@ const handleSubmit = async (e) => {
               required
               className="input-field"
             />
-            </FormField>
+            
           </div>
           <div>
             <label className="label-text">Contact Phone</label>
-            <FormField label="Title" name="title" error={errors.title}>
+            
             <input
               name="contactPhone"
               value={form.contactPhone}
@@ -230,7 +228,7 @@ const handleSubmit = async (e) => {
               required
               className="input-field"
             />
-            </FormField>
+           
           </div>
         </div>
 
