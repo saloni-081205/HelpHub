@@ -210,7 +210,7 @@ Use **MongoDB Atlas**. Update `MONGO_URI` on the backend host.
 - [ ] Register + login works from deployed frontend
 - [ ] Uploaded images load (check `crossOriginResourcePolicy`)
 
-## Roadmap
+## Future Enhancements
 
 - [ ] Real-time notifications via Socket.io
 - [ ] In-app chat between requester and volunteer
