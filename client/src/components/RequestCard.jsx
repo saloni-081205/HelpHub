@@ -1,8 +1,19 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Calendar, User, ChevronRight } from 'lucide-react';
+import { MapPin, Calendar, User, ChevronRight, Clock } from 'lucide-react';
 import CategoryIcon from './CategoryIcon';
 import UrgencyBadge from './UrgencyBadge';
 import StatusBadge from './StatusBadge';
+
+const API_ORIGIN = (
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+).replace(/\/api\/?$/, '');
+
+function resolveImageUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  if (path.startsWith('/')) return `${API_ORIGIN}${path}`;
+  return path;
+}
 
 export default function RequestCard({ request, variant = 'available' }) {
   const {
@@ -11,7 +22,7 @@ export default function RequestCard({ request, variant = 'available' }) {
   } = request;
 
   const shortDesc =
-    description?.length > 140 ? description.slice(0, 140).trim() + '…' : description;
+    description?.length > 120 ? description.slice(0, 120).trim() + '…' : description;
 
   const dateStr = requiredDate
     ? new Date(requiredDate).toLocaleDateString(undefined, {
@@ -19,69 +30,96 @@ export default function RequestCard({ request, variant = 'available' }) {
       })
     : '—';
 
+  const imgSrc = resolveImageUrl(image);
+
   return (
     <Link
       to={`/dashboard/requests/${_id}`}
-      className="card group block hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+      className="card group block w-full max-w-full overflow-hidden
+                 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
     >
-      <div className="flex gap-4">
-        {/* Icon/Image column */}
+      {/* ⚠️ min-w-0 on the flex parent lets children shrink */}
+      <div className="flex gap-3 sm:gap-4 min-w-0">
+        {/* ---- Icon / Image column ---- */}
         <div className="flex-shrink-0">
-          {image ? (
+          {imgSrc ? (
             <img
-              src={image}
+              src={imgSrc}
               alt={title}
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover"
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover bg-cream"
             />
           ) : (
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-cream border border-line flex items-center justify-center">
-              <CategoryIcon category={category} size={26} />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-cream border border-line
+                            flex items-center justify-center">
+              <CategoryIcon category={category} size={22} className="sm:hidden" />
+              <CategoryIcon category={category} size={26} className="hidden sm:block" />
             </div>
           )}
         </div>
 
-        {/* Content */}
+        {/* ---- Content column ---- */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-3 mb-1.5">
-            <h3 className="font-bold text-ink text-base sm:text-lg leading-tight truncate group-hover:text-brand-600 transition-colors">
+          {/* Title row */}
+          <div className="flex items-start justify-between gap-2 mb-1.5">
+            <h3 className="font-bold text-ink text-sm sm:text-base leading-snug
+                           line-clamp-2 break-words min-w-0
+                           group-hover:text-brand-600 transition-colors">
               {title}
             </h3>
             <ChevronRight
-              size={18}
-              className="text-muted group-hover:text-brand-500 group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-1"
+              size={16}
+              className="text-muted group-hover:text-brand-500 group-hover:translate-x-0.5
+                         transition-all flex-shrink-0 mt-0.5"
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 mb-2">
+          {/* Badges row — wraps nicely on small screens */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2">
             <StatusBadge status={status} />
             <UrgencyBadge urgency={urgency} />
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-muted">
+            <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs
+                             font-medium text-muted">
               <CategoryIcon category={category} size={12} />
-              {category}
+              <span className="truncate max-w-[100px] sm:max-w-none">{category}</span>
             </span>
           </div>
 
-          <p className="text-sm text-muted line-clamp-2 mb-3">{shortDesc}</p>
+          {/* Description */}
+          {shortDesc && (
+            <p className="text-xs sm:text-sm text-muted line-clamp-2 mb-2.5
+                          break-words">
+              {shortDesc}
+            </p>
+          )}
 
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin size={13} />
-              <span className="truncate max-w-[140px]">{location}</span>
+          {/* Meta row — stacks vertically on very small, wraps otherwise */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] sm:text-xs text-muted">
+            <span className="inline-flex items-center gap-1 min-w-0 max-w-full">
+              <MapPin size={12} className="flex-shrink-0" />
+              <span className="truncate">{location}</span>
             </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar size={13} />
+            <span className="inline-flex items-center gap-1 flex-shrink-0">
+              <Calendar size={12} className="flex-shrink-0" />
               {dateStr}
             </span>
+
             {variant === 'mine' && volunteerId && (
-              <span className="inline-flex items-center gap-1.5 text-teal-700 font-semibold">
-                <User size={13} />
-                {volunteerId.firstName} {volunteerId.lastName}
+              <span className="inline-flex items-center gap-1 text-teal-700 font-semibold
+                               min-w-0 max-w-full">
+                <User size={12} className="flex-shrink-0" />
+                <span className="truncate">
+                  {volunteerId.firstName} {volunteerId.lastName}
+                </span>
               </span>
             )}
+
             {variant === 'assigned' && requesterId && (
-              <span className="inline-flex items-center gap-1.5 text-brand-600 font-semibold">
-                <User size={13} />
-                {requesterId.firstName} {requesterId.lastName}
+              <span className="inline-flex items-center gap-1 text-brand-600 font-semibold
+                               min-w-0 max-w-full">
+                <User size={12} className="flex-shrink-0" />
+                <span className="truncate">
+                  {requesterId.firstName} {requesterId.lastName}
+                </span>
               </span>
             )}
           </div>
