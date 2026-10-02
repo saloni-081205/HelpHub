@@ -2,8 +2,6 @@
 
 A MERN-stack web app that connects people who need assistance with volunteers willing to help.
 
-![HelpHub hero](docs/screenshots/hero.png)
-
 ## Features
 
 - 🔐 JWT authentication with role-based access (Requester, Volunteer, Admin)
